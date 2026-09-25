@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio de Biofotónica y Sensado Óptico</title>
+<style>
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #F3EEE4; /* fondo exterior crema claro */
+  color: #2b2b2b;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* Contenedor central de ancho fijo */
+.page {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.03);
+}
+
+/* ===== BARRA SUPERIOR FIJA (header + nav pegados al hacer scroll) ===== */
+.site-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: #ffffff;
+}
+
+/* ===== ENCABEZADO ===== */
+.site-header {
+  height: 88px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 36px;
+}
+.site-header .brand-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.site-header .brand-left .mark {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: #14355c;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 1rem; flex-shrink: 0;
+}
+.mark-wrap { display: inline-flex; flex-shrink: 0; }
+.mark-img {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.inst-mark-img {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.site-header .brand-left .name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1c1c1c;
+  line-height: 1.25;
+}
+.site-header .brand-left .name span {
+  display: block;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: #777777;
+}
+.site-header .brand-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #555555;
+  font-size: 0.82rem;
+  text-align: right;
+  line-height: 1.3;
+}
+.site-header .brand-right .inst-mark {
+  width: 38px; height: 38px;
+  border: 2px solid #14355c;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #14355c; font-weight: 700; font-size: 0.75rem; flex-shrink: 0;
+}
+.site-header .brand-right strong {
+  display: block;
+  color: #333333;
+  font-size: 0.88rem;
+}
+
+/* ===== BARRA DE NAVEGACIÓN ===== */
+.site-nav {
+  background: #14355c; /* tono institucional oscuro */
+  width: 100%;
+}
+.site-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.site-nav > ul > li {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.sub-menu li {
+  display: block;
+  width: 100%;
+}
+.site-nav li + li::before {
+  content: "";
+  width: 1px;
+  align-self: center;
+  height: 18px;
+  background: rgba(255,255,255,0.25);
+}
+.site-nav a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 16px 22px;
+  color: #f2f2f2;
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+.site-nav a:hover { color: #ffffff; background: rgba(255,255,255,0.08); }
+.site-nav a.active { color: #ffffff; background: rgba(255,255,255,0.12); border-bottom-color: #ffffff; }
+.site-nav a.has-caret::after {
+  content: "";
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  margin-left: 2px;
+}
+.site-nav ul.sub-menu {
+  display: none;
+  position: absolute;
+  top: 100%; left: 0;
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  min-width: 220px;
+  z-index: 30;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+.site-nav li:hover ul.sub-menu { display: block; }
+.sub-menu a {
+  color: #333333;
+  padding: 11px 18px;
+  font-size: 0.83rem;
+  font-weight: 500;
+  display: block;
+}
+.sub-menu a:hover { background: #f2f2f2; color: #14355c; }
+.sub-menu li + li::before { content: none; }
+
+/* ===== CONTENIDO ===== */
+main {
+  padding-top: 26px;
+  flex: 1;
+}
+.page-section { display: none; }
+.page-section.active { display: block; }
+
+.content-wrap {
+  padding: 0 38px 30px;
+}
+.content-wrap > *:first-child { margin-top: 0; }
+
+.content-wrap h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #1c1c1c;
+  margin: 0 0 26px;
+}
+.content-wrap h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1c1c1c;
+  margin: 42px 0 18px;
+}
+.content-wrap h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #333333;
+  margin: 26px 0 10px;
+}
+.content-wrap p {
+  margin: 0 0 20px;
+  color: #2b2b2b;
+  font-weight: 500;
+}
+.content-wrap a { color: #14355c; }
+.content-wrap a.person-btn { color: #ffffff; }
+
+ul.plain {
+  padding-left: 20px;
+  margin: 0 0 20px;
+}
+ul.plain li { margin-bottom: 20px; }
+
+.meta {
+  color: #888888;
+  font-size: 0.86rem;
+  display: block;
+  margin-top: 2px;
+}
+
+/* ===== GALERÍA 4x2 ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 30px 0 10px;
+}
+.gallery-grid .cell {
+  aspect-ratio: 1 / 1;
+  background: #14355c;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.85);
+  font-size: 0.78rem;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+}
+.gallery-grid .cell:nth-child(2n) { background: #1f4c82; }
+.gallery-grid .cell:nth-child(3n) { background: #0f7d8c; }
+.gallery-grid .cell:nth-child(4n) { background: #2b5a7a; }
+
+@media (max-width: 720px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===== HOME REDISEÑADO: hero partido + stats + bento grid ===== */
+.home-welcome {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.home-welcome-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #1c1c1c;
+  margin: 0 0 22px;
+}
+.home-welcome p {
+  color: #333333;
+  margin: 0 0 18px;
+}
+.home-welcome p:last-of-type {
+  margin-bottom: 8px;
+}
+
+.home-hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 0;
+  align-items: stretch;
+  border-bottom: 1px solid #e5e5e5;
+}
+.home-hero-text {
+  padding: 56px 44px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.home-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #0f7d8c;
+  margin-bottom: 14px;
+}
+.home-headline {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+  font-weight: 700;
+  color: #0d1b2a;
+  line-height: 1.12;
+  margin: 0 0 20px;
+}
+.home-hero-text p {
+  color: #3a3f45;
+  font-size: 0.98rem;
+  max-width: 54ch;
+}
+.home-cta-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.home-btn {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+.home-btn-primary { background: #14355c; color: #ffffff; }
+.home-btn-primary:hover { background: #0d2540; text-decoration: none; }
+.home-btn-ghost { border: 1px solid #14355c; color: #14355c; }
+.home-btn-ghost:hover { background: #14355c; color: #ffffff; text-decoration: none; }
+
+.home-hero-visual {
+  position: relative;
+  background: #050709;
+  min-height: 320px;
+  overflow: hidden;
+}
+.home-hero-visual img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid #e5e5e5;
+}
+.stat-item {
+  padding: 26px 18px;
+  text-align: center;
+  border-right: 1px solid #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #14355c;
+}
+.stat-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #888888;
+  font-weight: 600;
+}
+
+.section-head-row { margin: 40px 0 22px; }
+.home-section-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1c1c1c;
+  margin: 0 0 8px;
+}
+.home-section-sub { color: #666666; font-size: 0.9rem; margin: 0; }
+
+.home-team-photo {
+  margin-bottom: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  line-height: 0;
+}
+.home-team-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+}
+
+@media (max-width: 900px) {
+  .home-hero { grid-template-columns: 1fr; }
+  .home-hero-visual { min-height: 240px; order: -1; }
+  .home-stats { grid-template-columns: repeat(2, 1fr); }
+  .stat-item:nth-child(2n) { border-right: none; }
+  .stat-item:nth-child(1), .stat-item:nth-child(2) { border-bottom: 1px solid #e5e5e5; }
+}
+/* ===== INVESTIGACIÓN: imagen arriba + banner + texto, apilado y sin interacción ===== */
+.research-row {
+  margin-bottom: 44px;
+}
+.research-header-images--split {
+  display: block;
+  width: 100%;
+  margin-bottom: 24px;
+}
+.research-img-row {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+}
+.research-img-row--4 {
+  margin-bottom: 14px;
+}
+.research-img-row--4 .research-img-box {
+  flex: 1 1 calc(25% - 10.5px);
+}
+.research-img-row--2 {
+  justify-content: center;
+}
+.research-img-row--2 .research-img-box {
+  flex: 0 0 calc(25% - 10.5px);
+}
+
+.research-img {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 18px;
+}
+.research-img-box {
+  position: relative;
+  flex: 1 1 0;
+  aspect-ratio: 1 / 1;
+  border-radius: 4px;
+  border: 1px solid #000000;
+  background: #14355c;
+  overflow: hidden;
+}
+.research-img-box img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.research-img-label {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  right: 10px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.85), 0 0 6px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.research-row:nth-child(4n+2) .research-img-box { background: #0f7d8c; }
+.research-row:nth-child(4n+3) .research-img-box { background: #2b5a7a; }
+.research-row:nth-child(4n+4) .research-img-box { background: #1f4c82; }
+
+.research-banner {
+  display: block;
+  width: 100%;
+  background: #0f7d8c;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 13px 20px;
+  text-align: left;
+  font-family: inherit;
+  margin-bottom: 14px;
+}
+.research-banner-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.research-banner-meta {
+  margin-top: 8px;
+  padding-left: 30px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.9);
+}
+.research-banner .rb-arrow {
+  display: inline-flex;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.research-banner .rb-arrow svg { width: 12px; height: 12px; }
+.research-summary { font-size: 0.95rem; color: #2b2b2b; margin: 0 0 12px; min-height: 1.4em; }
+
+.research-pub-card {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e5e5;
+}
+.research-pub-card .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888888;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 640px) {
+  .research-img { flex-wrap: wrap; }
+  .research-img-box { flex: 1 1 calc(50% - 7px); }
+}
+
+@media (max-width: 640px) {
+  .research-img-row { flex-wrap: wrap; }
+  .research-img-row .research-img-box { flex: 1 1 calc(50% - 7px); }
+  .research-img-row--2 .research-img-box { flex: 1 1 calc(50% - 7px); }
+}
+
+/* ===== PERSONAS ===== */
+.people-cat-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  color: #1c1c1c;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 34px 0 22px;
+}
+.people-cat-heading::before,
+.people-cat-heading::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #dcdcdc;
+}
+
+.people-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 22px;
+  margin: 0 0 30px;
+}
+.person-card-wrap {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.person-card {
+  text-align: center;
+  width: 100%;
+}
+.person-card .ph {
+  width: 85%;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  background: #eef0f2;
+  border: 1px solid #e2e2e2;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #14355c;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  transition: box-shadow 0.15s ease;
+}
+.person-card:hover .ph { box-shadow: 0 4px 14px rgba(20,53,92,0.18); }
+.person-card .pname {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.98rem;
+  line-height: 1.3;
+  margin: 0 0 3px;
+  color: #14355c;
+}
+.person-card .pname .first { font-weight: 700; display: block; }
+.person-card .pname .last { font-weight: 700; display: block; }
+.person-card .role { font-size: 0.8rem; color: #444444; font-weight: 700; margin-bottom: 8px; }
+
+.person-card-wrap .person-btn { margin-top: 10px; }
+.person-btn, button.copy-email-btn.person-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #14355c;
+  color: #ffffff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+}
+.person-btn:hover { background: #0d2540; }
+.person-btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.btn-icon {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+.btn-icon svg { width: 100%; height: 100%; display: block; }
+
+/* ===== ENLACES EXTERNOS (texto + icono chiquito) ===== */
+.map-embed-wrap {
+  margin: 14px 0 24px;
+  border: 1px solid #e2e2e2;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.map-embed-wrap iframe { display: block; }
+
+.ext-link-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 16px 0 24px;
+}
+.ext-link-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #14355c;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.ext-link-card:hover { text-decoration: underline; }
+.ext-link-card .arrow {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.ext-link-card .arrow svg { width: 100%; height: 100%; display: block; }
+.ext-link-card-stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.ext-link-card-stacked .pub-venue-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pi-box {
+  display: flex;
+  gap: 26px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e2e2e2;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.pi-box .ph {
+  width: 165px; height: 165px;
+  flex-shrink: 0;
+  background: #eef0f2;
+  border: 1px solid #e2e2e2;
+  display: flex; align-items: center; justify-content: center;
+  color: #14355c; font-weight: 700; font-size: 1.3rem;
+}
+.pi-box .role { color: #444444; font-size: 0.86rem; font-weight: 700; margin-bottom: 10px; }
+.person-fullname strong { color: #14355c; }
+.person-fullname { font-size: 1.15rem; }
+
+/* Toast de confirmación al copiar */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1c1c1c;
+  color: #ffffff;
+  padding: 12px 22px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 640px) {
+  .people-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===== TABS PUBLICACIONES ===== */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #e2e2e2;
+  margin-bottom: 24px;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  color: #666666;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  font-family: inherit;
+}
+.tab-btn.active {
+  color: #14355c;
+  font-weight: 700;
+  border-bottom-color: #14355c;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.entry {
+  font-size: 0.93rem;
+  margin: 0 0 14px;
+  color: #2b2b2b;
+}
+
+.alumni-list { padding-left: 0; list-style: none; margin: 0; }
+.alumni-list li {
+  padding: 14px 0;
+  border-top: 1px solid #eeeeee;
+}
+.alumni-list li:last-child { border-bottom: 1px solid #eeeeee; }
+
+/* ===== ESPACIO INFERIOR ===== */
+.bottom-space { height: 20px; }
+
+/* ===== PIE DE PÁGINA ===== */
+.site-footer {
+  background: #14355c;
+  color: #d9e2ec;
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.82rem;
+  padding: 14px 30px;
+}
+.site-footer a { color: #b9cde6; }
+
+/* ===== BOTÓN HAMBURGUESA (solo visible en móvil) ===== */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  flex-shrink: 0;
+}
+.hamburger-btn span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: #14355c;
+  border-radius: 2px;
+}
+.drawer-close-btn {
+  display: none;
+}
+.mobile-drawer-overlay {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .site-header { padding: 14px 18px; }
+  .hamburger-btn { display: flex; }
+  .site-header .brand-left .name { font-size: 0.95rem; }
+  .site-header .brand-right { display: none; } /* se simplifica el header en móvil para dar espacio a la hamburguesa */
+
+  /* Oculta la barra de navegación normal en móvil */
+  .site-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85%;
+    max-width: 340px;
+    height: 100%;
+    background: #14355c;
+    z-index: 300;
+    transform: translateX(-100%);
+    transition: transform 0.28s ease;
+    overflow-y: auto;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.25);
+  }
+  .site-nav.open { transform: translateX(0); }
+
+  .drawer-close-btn {
+    display: block;
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 5;
+  }
+
+  .site-nav > ul {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 64px 0 24px;
+  }
+  .site-nav li { display: block; }
+  .site-nav li + li::before { display: none; }
+  .site-nav a {
+    padding: 16px 24px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .site-nav a.has-caret::after {
+    margin-left: auto;
+  }
+  .site-nav a.has-caret {
+    justify-content: space-between;
+  }
+
+  /* Submenú de Personal: acordeón, oculto hasta que se toca "Personal" */
+  .site-nav a.has-caret::after {
+    transition: transform 0.2s ease;
+  }
+  .site-nav li.submenu-open > a.has-caret::after {
+    transform: rotate(180deg);
+  }
+  .site-nav ul.sub-menu {
+    display: none;
+    position: static;
+    background: rgba(0,0,0,0.15);
+    border: none;
+    box-shadow: none;
+    min-width: 0;
+  }
+  .site-nav li:hover ul.sub-menu { display: none; }
+  .site-nav li.submenu-open:hover > ul.sub-menu,
+  .site-nav li.submenu-open > ul.sub-menu {
+    display: block;
+  }
+  .sub-menu a {
+    color: #d9e2ec;
+    padding: 13px 24px 13px 42px;
+    font-size: 0.88rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .sub-menu a:hover { background: rgba(255,255,255,0.08); color: #ffffff; }
+
+  /* Overlay oscuro detrás del drawer */
+  .mobile-drawer-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+  }
+  .mobile-drawer-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .pi-box { flex-direction: column; align-items: center; text-align: center; }
+}
+
+/* ===== BUSCADOR DE PUBLICACIONES ===== */
+.pub-search-card {
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 26px 28px 10px;
+  margin-top: 10px;
+}
+.pub-filters {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.pub-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pub-filter-field label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888888;
+  font-weight: 600;
+}
+.pub-filter-field select {
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: #2b2b2b;
+  background: #ffffff;
+  min-width: 170px;
+  cursor: pointer;
+}
+.pub-filter-field select:focus { outline: 2px solid #14355c; outline-offset: 1px; }
+
+.pub-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 12px;
+  margin-bottom: 6px;
+}
+#pubCount {
+  font-size: 0.88rem;
+  color: #444444;
+}
+.pub-pagination {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+.pub-pagination button {
+  background: none;
+  border: none;
+  color: #2a6ebb;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-family: inherit;
+}
+.pub-pagination button:hover { background: #f0f4f8; text-decoration: underline; }
+.pub-pagination button.current-page {
+  color: #14355c;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: default;
+  background: none;
+}
+.pub-pagination button:disabled {
+  color: #bbbbbb;
+  cursor: default;
+}
+.pub-pagination-bottom { margin: 16px 0 22px; }
+
+.pub-row {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid #eeeeee;
+}
+.pub-row:first-child { border-top: none; }
+.pub-row .pub-year {
+  font-weight: 700;
+  color: #1c1c1c;
+  font-size: 0.92rem;
+}
+.pub-row .pub-text {
+  font-size: 0.92rem;
+  color: #2b2b2b;
+  line-height: 1.6;
+}
+.pub-row .pub-text em { font-style: italic; }
+.pub-row .pub-type-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #14355c;
+  background: #eef2f7;
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin-right: 8px;
+  vertical-align: middle;
+  font-weight: 600;
+}
+.pub-row .pub-link {
+  margin-left: 6px;
+  color: #14355c;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.pub-row .pub-link:hover { text-decoration: underline; }
+.pub-empty {
+  padding: 30px 0;
+  color: #888888;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .pub-row { grid-template-columns: 1fr; gap: 4px; }
+  .pub-row .pub-year { font-size: 0.8rem; color: #14355c; }
+  .pub-search-card { padding: 18px 16px 10px; }
+  .pub-filter-field select { min-width: 0; width: 100%; }
+  .pub-filters { gap: 12px; }
+  .pub-filter-field { flex: 1 1 130px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="site-topbar">
+  <header class="site-header">
+    <div class="brand-left">
+      <!-- LAB LOGO AREA (BOS):
+           To activate, upload the file images/logo-bos.png (recommended 92x92px, circle or square, transparent background).
+           While that file doesn't exist, the "BOS" initials are shown automatically as a fallback — nothing else needs to change. -->
+      <span class="mark-wrap">
+        <img class="mark-img" src="images/logo-bos.png" alt="Lab logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="mark" style="display:none;">BOS</div>
+      </span>
+      <div class="name">Biophotonics<br>and Optical Sensing Laboratory</div>
+    </div>
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <nav class="site-nav" id="siteNav">
+    <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close menu">&times;</button>
+    <ul>
+      <li><a href="#" data-nav="inicio" class="active">Home</a></li>
+      <li><a href="#" data-nav="investigacion">Research</a></li>
+      <li><a href="#" data-nav="publicaciones">Publications</a></li>
+      <li><a href="#" data-nav="personal" class="has-caret">People</a><ul class="sub-menu"><li><a href="#" data-goto="personal" data-subtab="actuales">Current Members</a></li><li><a href="#" data-goto="personal" data-subtab="alumni">Alumni</a></li></ul></li>
+      <li><a href="#" data-nav="difusion">Outreach</a></li>
+      <li><a href="#" data-nav="contacto">Contact</a></li>
+    </ul>
+  </nav>
+  </div>
+
+  <div class="mobile-drawer-overlay" id="drawerOverlay"></div>
+
+  <main>
+<section class="page-section active" id="sec-inicio">
+  <div class="content-wrap home-welcome">
+    <h1 class="home-welcome-title">Welcome to the Biophotonics and Optical Sensing Laboratory!</h1>
+    <p>The detection and processing of optical waves is at the core of numerous sensing technologies relevant to material science, biology, and medicine. Through basic research and applied studies, our group is dedicated to advancing optical sensing strategies for biomedical applications; including the development of optical fiber-based sensing platforms as well as the structural dynamics and micro rheological characterization of complex materials like colloidal systems, non-ergodic media, and biological fluids and aerosols.</p>
+    <p>For inquiries about our research, collaboration opportunities or available infrastructure, please contact <a href="#" data-nav="contacto">Dr. José Rafael Guzmán Sepúlveda</a>.</p>
+  </div>
+
+  <div class="content-wrap">
+    <div class="home-team-photo">
+      <img src="images/home.jpg" alt="Lab team">
+    </div>
+  </div>
+</section>
+<section class="page-section" id="sec-investigacion">
+  <div class="content-wrap">
+    <div class="research-header-images research-header-images--split">
+      <div class="research-img-row research-img-row--4">
+        <div class="research-img-box"><img src="images/blood.jpg" alt="Blood Microrheology"><span class="research-img-label">Blood Microrheology</span></div>
+        <div class="research-img-box"><img src="images/research.jpg" alt="Extreme Environments"><span class="research-img-label">Extreme Environments</span></div>
+        <div class="research-img-box"><img src="images/intracellular.svg" alt="Biological Aerosols"><span class="research-img-label">Biological Aerosols</span></div>
+        <div class="research-img-box"><img src="images/visual.jpg" alt="Colloidal Dynamics"><span class="research-img-label">Colloidal Dynamics</span></div>
+      </div>
+      <div class="research-img-row research-img-row--2">
+        <div class="research-img-box"><img src="images/cellular.png" alt="Intracellular Dynamics"><span class="research-img-label">Intracellular Dynamics</span></div>
+        <div class="research-img-box"><img src="images/optical.jpg" alt="Random Optical Fields"><span class="research-img-label">Random Optical Fields</span></div>
+      </div>
+    </div>
+    <p>Dr. Guzmán-Sepúlveda's multidisciplinary research (optics, materials science, biomedical, biophysics) has relied on interdepartmental and interinstitutional cooperation, industry collaborations, and partnership with hospitals. The research projects in which he has participated have been funded by different agencies, including SECIHTI, ONR Global, ARL, DEVCOM, DARPA, NIH, NSF, and Malvern Panalytics, among others. Ongoing and relevant past research projects in which Dr. Guzmán-Sepúlveda has participated are:</p>
+
+    <div id="research-list"></div>
+  </div>
+</section>
+<section class="page-section" id="sec-publicaciones">
+  <div class="content-wrap">
+    <p>The symbol † indicates a student is the first author. The symbol * indicates the corresponding author.</p>
+
+    <div class="pub-search-card">
+      <div class="pub-filters">
+        <div class="pub-filter-field">
+          <label for="filterYear">Year</label>
+          <select id="filterYear"><option value="">All</option></select>
+        </div>
+        <div class="pub-filter-field">
+          <label for="filterType">Type</label>
+          <select id="filterType">
+            <option value="">All</option>
+            <option value="Journal Paper">Journal Papers</option>
+            <option value="Conference Proceeding">Conference Proceedings</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pub-meta-row">
+        <span id="pubCount"></span>
+        <div class="pub-pagination" id="pubPaginationTop"></div>
+      </div>
+
+      <div id="pubList"></div>
+
+      <div class="pub-pagination pub-pagination-bottom" id="pubPaginationBottom"></div>
+    </div>
+  </div>
+</section>
+<section class="page-section" id="sec-personal">
+  <div class="content-wrap">
+
+    <h2 class="people-cat-heading">Principal Investigator</h2>
+    <div class="pi-box">
+      <!-- IMAGE HERE: José Rafael Guzmán Sepúlveda's photo. Replace the div below with:
+           <img src="images/jose-guzman.jpg" alt="José Rafael Guzmán Sepúlveda" style="width:100%;height:100%;object-fit:cover;object-position:top center;">
+           inside the same .ph container (130x130px, square). -->
+      <div class="ph"><img src="images/jose-guzman-sepulveda.jpg" alt="José Rafael Guzmán Sepúlveda" style="width:100%;height:100%;object-fit:cover;object-position:top center;"></div>
+      <div>
+        <h3 class="person-fullname" style="margin-top:0;">José Rafael <strong>Guzmán Sepúlveda</strong>, PhD</h3>
+        <div class="role">Full-time Researcher 3B &middot; National Researcher (SNII-1) &middot; Mexican Academy of Optics (AMO), Vice President 2025&ndash;2026</div>
+        <p>José Rafael Guzmán Sepúlveda is a Mechatronics Engineer (U. of Guanajuato, 2010; Summa Cum Laude). He holds a Master's Degree in Electronics Engineering (Autonomous U. of Tamaulipas, 2013; Honors). He received his Master's Degree and Ph.D. in Optics from CREOL, The College of Optics and Photonics, U. of Central Florida (2016 and 2019, respectively; Student of the Year). He has been an active member of international societies, including OPTICA (formerly OSA), IEEE, SPIE, and the Mexican Academy of Optics (AMO). He has been part of the Board of Directors of AMO (Member, 2023-2024; Vice President, 2025-2026). He is also founding member and advisor of the OPTICA student chapter Biophotonics Cinvestav Monterrey. Dr. Guzmán Sepúlveda periodically teaches graduate courses in the Biomedical Engineering and Physics programs at Cinvestav Monterrey and continuously supervises doctoral, masters, and undergraduate projects.</p>
+        <div class="person-btn-row">
+          <button class="person-btn copy-email-btn" data-email="jose.guzmans@cinvestav.mx"><span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span> Email</button>
+          <a class="person-btn" href="https://scholar.google.com/citations?user=59WTtTAAAAAJ" target="_blank" rel="noopener"><span class="btn-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg></span> Google Scholar</a>
+          <a class="person-btn" href="https://www.researchgate.net/profile/Jose-Rafael-Guzman-Sepulveda" target="_blank" rel="noopener"><span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> ResearchGate</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="actuales">Current Members</button>
+      <button class="tab-btn" data-tab="alumni">Alumni</button>
+    </div>
+
+    <div class="tab-panel active" id="actuales">
+
+    <h2 class="people-cat-heading">Postdoctoral</h2>
+    <div class="people-grid" id="grid-postdoc"></div>
+
+    <h2 class="people-cat-heading">PhD Students</h2>
+    <div class="people-grid" id="grid-phd"></div>
+
+    <h2 class="people-cat-heading">Master's Students</h2>
+    <div class="people-grid" id="grid-masters"></div>
+
+    </div>
+
+    <div class="tab-panel" id="alumni">
+    <div class="pub-search-card">
+      <div class="pub-filters">
+        <div class="pub-filter-field">
+          <label for="filterAlumniYear">Year</label>
+          <select id="filterAlumniYear"><option value="">All</option></select>
+        </div>
+        <div class="pub-filter-field">
+          <label for="filterAlumniGrado">Degree</label>
+          <select id="filterAlumniGrado">
+            <option value="">All</option>
+            <option value="PhD">PhD</option>
+            <option value="Master's">Master's</option>
+            <option value="Bachelor's">Bachelor's</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pub-meta-row">
+        <span id="alumniCount"></span>
+        <div class="pub-pagination" id="alumniPaginationTop"></div>
+      </div>
+
+      <div id="alumniList"></div>
+
+      <div class="pub-pagination pub-pagination-bottom" id="alumniPaginationBottom"></div>
+    </div>
+    </div>
+  </div>
+</section>
+<div class="toast" id="copyToast">Copied to clipboard</div>
+
+<section class="page-section" id="sec-difusion">
+  <div class="content-wrap">
+
+    <h2>Articles</h2>
+    <ul class="plain">
+      <li>Guzman-Sepulveda, J. R. Peeking inside colloidal droplets as they evaporate. <em>Avance y Perspectiva</em>, 7(4), 2022. <a class="ext-link-card" href="https://ayp.cinvestav.mx/espiando-el-interior-de-gotas-coloidales-mientras-se-evaporan/" target="_blank" rel="noopener"><span class="arrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/></svg></span></a></li>
+      <li>Guzman-Sepulveda, J. R. Passive microrheology of blood: the regime where blood measures itself. <em>Avance y Perspectiva</em>, 7(5), 2022. <a class="ext-link-card" href="https://ayp.cinvestav.mx/microrreologia-pasiva-de-la-sangre-el-regimen-en-el-que-la-sangre-se-mide-a-si-misma/" target="_blank" rel="noopener"><span class="arrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/></svg></span></a></li>
+      <li>"One-page thesis" institutional website. <a class="ext-link-card" href="https://cinvestav.mx/mty/comunicacion/divulgacion" target="_blank" rel="noopener"><span class="arrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/></svg></span></a></li>
+    </ul>
+
+    <h2>Biophotonics Student Chapter</h2>
+    <p>The OPTICA student chapter Biophotonics Cinvestav Monterrey shares the laboratory's activities and events on its social networks.</p>
+    <div class="ext-link-list">
+      <a class="ext-link-card" href="https://www.facebook.com/BiophotonicsMonterrey" target="_blank" rel="noopener">Facebook <span class="arrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/></svg></span></a>
+      <a class="ext-link-card" href="https://www.instagram.com/biophotonics_monterrey/" target="_blank" rel="noopener">Instagram <span class="arrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/></svg></span></a>
+    </div>
+  </div>
+</section>
+<section class="page-section" id="sec-contacto">
+  <div class="content-wrap">
+
+    <h2>Physical Address</h2>
+    <p>
+      Cinvestav Unidad Monterrey<br>
+      Vía del Conocimiento 201, Parque de Investigación e Innovación Tecnológica (PIIT)<br>
+      Apodaca, Nuevo León 66600, México
+    </p>
+    <div class="map-embed-wrap">
+      <iframe
+        src="https://www.google.com/maps?q=Cinvestav+Unidad+Monterrey,+V%C3%ADa+del+Conocimiento+201,+PIIT,+Apodaca,+Nuevo+Le%C3%B3n&output=embed"
+        width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade" title="Mapa de ubicación - Cinvestav Unidad Monterrey">
+      </iframe>
+    </div>
+
+    <h2>Inquiries</h2>
+    <p>For inquiries about our research, collaboration opportunities or available infrastructure, please contact Dr. José Rafael Guzmán Sepúlveda.</p>
+    <p>Office Phone: +52 81 11561740 ext. 4515</p>
+    <p><a href="#" id="contactEmailLink" class="copy-email-btn" data-email="jose.guzmans@cinvestav.mx">jose.guzmans@cinvestav.mx</a></p>
+    <div class="ext-link-list">
+      <a class="ext-link-card" href="https://www.cinvestav.mx/mty/investigacion/directorio-de-investigacion/jos233-rafael-guzm225n-sep250lveda" target="_blank" rel="noopener">Cinvestav Institutional Profile <span class="arrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/></svg></span></a>
+    </div>
+  </div>
+</section>
+    <div class="bottom-space"></div>
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2026 Biophotonics and Optical Sensing Laboratory
+  </footer>
+
+</div>
+
+<script>
+var PUB_DATA = [{"year": "2026", "yearLabel": "2026", "type": "Journal Paper", "text": "J. A. Perales-Hernández†, J. R. Guzmán-Sepúlveda* &amp; A. Dogariu (2026). Probing intracellular dynamics of prostate cells with coherence-gated dynamic light scattering. <em>Nanomedicine: Nanotechnology, Biology and Medicine</em>, 77, 103016.", "doi": "https://doi.org/10.1016/j.nano.2026.103016"}, {"year": "2026", "yearLabel": "2026", "type": "Journal Paper", "text": "R. K. Delgadillo-Gonzalez, N. Mar-Abundis, Y. A. Fuentes-Rubio, R. F. Domínguez-Cruz &amp; J. R. Guzmán-Sepúlveda (2026). Thermo-optic characterization of optically similar aqueous solutions using SMS/MMI fiber sensor. <em>Journal of Physics D: Applied Physics</em>, 59(36), 365104.", "doi": "https://doi.org/10.1088/1361-6463/ae9f6e"}, {"year": "2026", "yearLabel": "2026", "type": "Journal Paper", "text": "O. Arrieta-Guerrero†, A. Jaramillo-Granada, J. R. Guzmán-Sepúlveda*, J. C. Ruiz-Suarez* (2026). Pressure-driven dissociation of a Kr clathrate in the presence of colloids. <em>The Journal of Physical Chemistry Letters</em>, 17(28), 7879&ndash;7886.", "doi": "https://doi.org/10.1021/acs.jpclett.6c01558"}, {"year": "2026", "yearLabel": "2026", "type": "Conference Proceeding", "text": "J. R. Guzmán-Sepúlveda*, J. A. Perales-Hernández, A. Dogariu (2026, May). Optical characterization of healthy and cancerous prostate cells using coherence-gated DLS. In <em>Conference on Lasers and Electro-Optics (CLEO) 2026</em> (p. ATU2B.6).", "doi": "https://doi.org/10.1364/CLEO_AT.2026.ATU2B.6"}, {"year": "2026", "yearLabel": "2026", "type": "Conference Proceeding", "text": "J. A. Perales-Hernández†, H. J. Mercado-Uribe, J. R. Guzmán-Sepúlveda (2026, May). Optical monitoring of intracellular dynamics in HeLa cells during cell death induced by photodynamic therapy. In <em>CLEO 2026</em> (p. ATH3A.1).", "doi": "https://doi.org/10.1364/CLEO_AT.2026.ATH3A.1"}, {"year": "2026", "yearLabel": "2026", "type": "Conference Proceeding", "text": "K. M. Lee, M. Eshaghi, J. R. Guzmán-Sepúlveda, C. Acevedo, A. Dogariu (2026, May). Probing Speckle Morphology with Colloids Dynamics. In <em>CLEO 2026</em> (p. SM4F.4).", "doi": "https://doi.org/10.1364/CLEO_SI.2026.SM4F.4"}, {"year": "2026", "yearLabel": "2026", "type": "Conference Proceeding", "text": "J. R. Guzmán-Sepúlveda*, J. A. Perales-Hernández, A. Dogariu (2026, April). In <em>Optica Biophotonics Congress</em> (p. OW2C.2).", "doi": "https://opg.optica.org/abstract.cfm?uri=OTS-2026-OW2C.2"}, {"year": "2025", "yearLabel": "2025", "type": "Journal Paper", "text": "Arrieta-Guerrero, O. A.†, Díaz-Zepeda, D. N., Mercado-Uribe, H., Guzmán-Sepúlveda, J. R., &amp; Ruiz-Suárez, J. C. (2025). Water becomes a supercooled complex fluid below freezing temperatures under isochoric conditions. <em>Journal of Molecular Liquids</em>, 129080.", "doi": "https://doi.org/10.1016/j.molliq.2025.129080"}, {"year": "2025", "yearLabel": "2025", "type": "Journal Paper", "text": "Zora-Guzman, E.†, Perales-Hernandez, J. A., &amp; Guzman-Sepulveda, J. R.* (2025). Background-free interferometric dynamic light scattering. <em>IEEE Sensors Journal</em>, 25(21), 39827&ndash;39834.", "doi": "https://doi.org/10.1109/JSEN.2025.3612304"}, {"year": "2025", "yearLabel": "2025", "type": "Journal Paper", "text": "Reyes-Alejo, V.†, &amp; Guzman-Sepulveda, J. R.* (2025). Dynamic speckle generation tuned by thermo-optic effects. <em>Optics and Lasers in Engineering</em>, 194, 109176.", "doi": "https://doi.org/10.1016/j.optlaseng.2025.109176"}, {"year": "2025", "yearLabel": "2025", "type": "Conference Proceeding", "text": "E. Zora-Guzman†, V. Reyes-Alejo, J. A. Perales-Hernandez, O. A. Arrieta-Guerrero, R. A. Alvarez-Aguirre &amp; J. R. Guzman-Sepulveda* (2025, October). Particle Sizing of Native Aerosols with Coherence-gated DLS. In <em>Frontiers in Optics</em> (pp. FW7D.4).", "doi": "https://doi.org/10.1364/FIO.2025.FW7D.4"}, {"year": "2025", "yearLabel": "2025", "type": "Conference Proceeding", "text": "E. Zora-Guzman†, J. A. Perales-Hernandez, V. Reyes-Alejo, O. A. Arrieta-Guerrero, R. A. Alvarez-Aguirre &amp; J. R. Guzman-Sepulveda* (2025, October). Background-free interferometric scattering from dynamic complex fluids. In <em>Frontiers in Optics</em> (pp. FW7D.5).", "doi": "https://doi.org/10.1364/FIO.2025.FW7D.5"}, {"year": "2025", "yearLabel": "2025", "type": "Conference Proceeding", "text": "O. A. Arrieta-Guerrero†, J. R. Guzman-Sepulveda* &amp; J. C. Ruiz-Suarez. Optical characterization of noble gas clathrate hydrates at room temperature. In <em>Frontiers in Optics</em> (pp. FW7D.6).", "doi": "https://doi.org/10.1364/FIO.2025.FW7D.6"}, {"year": "2025", "yearLabel": "2025", "type": "Conference Proceeding", "text": "V. Reyes-Alejo†, J. A. Perales-Hernandez, O. A. Arrieta-Guerrero, E. Zora-Guzman, R. A. Alvarez-Aguirre &amp; J. R. Guzman-Sepulveda*. Thermo-optic modulation of dynamic speckle patterns. In <em>Frontiers in Optics</em> (pp. JTu4A.19).", "doi": "https://doi.org/10.1364/FIO.2025.JTu4A.19"}, {"year": "2025", "yearLabel": "2025", "type": "Conference Proceeding", "text": "J. A. Perales-Hernandez†, J. L. Garcia-Cordero, O. A. Arrieta-Guerrero, E. Zora-Guzman &amp; J. R. Guzman-Sepulveda*. Low-cost fluorescence microscopy with optical fiber-based uniform illumination. In <em>Frontiers in Optics</em> (pp. JTu4A.20).", "doi": "https://doi.org/10.1364/FIO.2025.JTu4A.20"}, {"year": "2025", "yearLabel": "2025", "type": "Conference Proceeding", "text": "Delgadillo-González, R. K., Mar-Abundis, N., Domínguez-Cruz, R. F., Ampudia-Ramírez, F., Fuentes-Rubio, Y. A., &amp; Guzmán-Sepúlveda, J. R. (2025). The Thermo-Optic Discrimination of an Aqueous Solution Composition Using a Multimodal Interference Fiber Optic Sensor. <em>Engineering Proceedings</em>, 87(1), 54.", "doi": "https://doi.org/10.3390/engproc2025087054"}, {"year": "2024", "yearLabel": "2024", "type": "Journal Paper", "text": "Perales-Hernandez, J.A.†, Garcia-Cordero, J.L., &amp; Guzman-Sepulveda, J.R.* (2024). Optical fiber-based homogeneous illumination system for microscopy applications. <em>Applied Optics</em>, 63(25), 6806&ndash;6816.", "doi": "https://doi.org/10.1364/AO.532874"}, {"year": "2024", "yearLabel": "2024", "type": "Journal Paper", "text": "E. Zora-Guzman† &amp; J.R. Guzman-Sepulveda* (2024). Optical characterization of native aerosols from e-cigarettes in localized volumes. <em>Biomedical Optics Express</em>, 15(3), 1697&ndash;1708.", "doi": "https://doi.org/10.1364/BOE.507316"}, {"year": "2024", "yearLabel": "2024", "type": "Conference Proceeding", "text": "Quiñones-Flores, A. A., Guzmán-Sepulveda, J. R., &amp; Castillo-Guzmán, A. A. (2024, September). Study and fabrication of a multimode interference offset tapered no-core fiber refractometer enhanced by taper positioning. In <em>Frontiers in Optics</em> (pp. JW5A-2).", "doi": "https://doi.org/10.1364/FIO.2024.JW5A.2"}, {"year": "2023", "yearLabel": "2023", "type": "Journal Paper", "text": "A. A. Quiñones-Flores†, J.R. Guzman-Sepulveda, &amp; A.A. Castillo-Guzman (2023). Relative humidity measurement based on a tapered, PVA-coated fiber optics multimode interference sensor. <em>Optics</em>, 4(3), 473&ndash;481.", "doi": "https://doi.org/10.3390/opt4030034"}, {"year": "2023", "yearLabel": "2023", "type": "Journal Paper", "text": "N. Mar-Abundis, Y. A. Fuentes-Rubio, R. F. Domínguez-Cruz, &amp; J. R. Guzmán-Sepúlveda (2023). Sugar detection in aqueous solution using an SMS fiber device. <em>Sensors</em>, 23(14), 6289.", "doi": "https://doi.org/10.3390/s23146289"}, {"year": "2023", "yearLabel": "2023", "type": "Journal Paper", "text": "C. H. Acevedo, Y. Torres Moreno, J. R. Guzman-Sepulveda, &amp; A. Dogariu (2023). Spatial intensity correlations of Mathieu speckle fields. <em>J. Modern Optics</em>, 1&ndash;9.", "doi": "https://doi.org/10.1080/09500340.2023.2232886"}, {"year": "2023", "yearLabel": "2023", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R.* (2023). Temporal coherence characteristics of fiber optics multimode interference devices. <em>Optik</em>, 283, 170895.", "doi": "https://doi.org/10.1016/j.ijleo.2023.170895"}, {"year": "2023", "yearLabel": "2023", "type": "Journal Paper", "text": "P. A. A. Fernandez, C. H. Acevedo, J. R. Guzman-Sepulveda, &amp; A. Dogariu (2023). First-order statistics of intensity and phase in Laguerre&ndash;Gauss speckles. <em>J. Optical Society of America A</em>, 40(4), 782&ndash;791.", "doi": "https://doi.org/10.1364/JOSAA.479887"}, {"year": "2023", "yearLabel": "2023", "type": "Journal Paper", "text": "G. Salazar-Enríquez†, J. R. Guzmán-Sepúlveda, G. Peñaloza-Jiménez (2023). Understanding and acceptance of the theory of evolution in high school students in Mexico. <em>PLoS ONE</em>, 18(2), e0278555.", "doi": "https://doi.org/10.1371/journal.pone.0278555"}, {"year": "2023", "yearLabel": "2023", "type": "Conference Proceeding", "text": "F. J. Pantoja-Guevara, J. R. Guzman-Sepulveda &amp; J. C. Ruiz-Suarez. Nano and micro-vesicle diffusion through proteins, electrostatics mediate its interactions. <em>Biophysical Journal</em>, 122(3), 232a.", "doi": "https://doi.org/10.1016/j.bpj.2022.11.1367"}, {"year": "2023", "yearLabel": "2023", "type": "Conference Proceeding", "text": "F. J. Pantoja-Guevara, L.J. Bernal-Sánchez, J. R. Guzman-Sepulveda, E. Saldivar-Guerra &amp; R. Perez-Isidoro (2023). Fractal patterns from dried droplets. A method to test nanoscale features of nanoparticles and vesicles. <em>Biophysical Journal</em>, 122(3), 279a.", "doi": "https://doi.org/10.1016/j.bpj.2022.11.1591"}, {"year": "2022", "yearLabel": "2022", "type": "Journal Paper", "text": "E. Perez-Careta, D. I. Hernández-Farías, J. R. Guzman-Sepulveda, M. Torres-Cisneros, T. Cordoba-Fraga, J. C. Martinez-Espinoza &amp; Rafael Guzman-Cabrera (2022). One-class classification for identifying COVID-19 in X-ray images. <em>Programming and Computer Software</em>, 48, 235&ndash;242.", "doi": "https://doi.org/10.1134/S0361768822040041"}, {"year": "2022", "yearLabel": "2022", "type": "Journal Paper", "text": "M. Eshaghi, C.H. Acevedo, M. Batarseh, J. R. Guzman-Sepulveda &amp; A. Dogariu (2022). Phase memory of optical vortex beams. <em>Scientific Reports</em>, 12, 1042.", "doi": "https://doi.org/10.1038/s41598-022-14074-4"}, {"year": "2022", "yearLabel": "2022", "type": "Journal Paper", "text": "X. González-Ramírez, R. Guzmán-Cabrera, I.A. Hernández-Robles &amp; J. R. Guzmán-Sepúlveda* (2022). Statistical technique to improve the wave potential estimation for the design of wave electric generators. <em>Energy Conversion and Management X</em>, 14, 100220.", "doi": "https://doi.org/10.1016/j.ecmx.2022.100220"}, {"year": "2022", "yearLabel": "2022", "type": "Journal Paper", "text": "Y. A. Fuentes-Rubio†, Y. A. Zuniga-Avalos, J. R. Guzman-Sepulveda &amp; R. F. Domínguez-Cruz (2022). Refractometric detection of adulterated milk based on multimode interference effects. <em>Foods</em>, 11(8), 1075.", "doi": "https://doi.org/10.3390/foods11081075"}, {"year": "2022", "yearLabel": "2022", "type": "Journal Paper", "text": "R. Guzman-Cabrera, I. A. Hernandez-Robles, X. Gonzalez-Ramirez &amp; J. R. Guzman-Sepulveda* (2022). Improved approach to wave potential estimation using bivariate distributions. <em>J. Intelligent and Fuzzy Systems</em>, 42(5), 4653&ndash;4658.", "doi": "https://doi.org/10.3233/JIFS-219253"}, {"year": "2022", "yearLabel": "2022", "type": "Journal Paper", "text": "J. R. Guzman-Sepulveda, M. Batarseh, R. Wu, W. M. DeCampli &amp; A. Dogariu (2022). Passive high-frequency microrheology of blood. <em>Soft Matter</em>, 18, 2452&ndash;2461.", "doi": "https://doi.org/10.1039/D1SM01726H"}, {"year": "2022", "yearLabel": "2022", "type": "Journal Paper", "text": "Wu, R., Guzman-Sepulveda, J. R., Kalra, A. P., Tuszynski, J. A. &amp; Dogariu, A. (2022). Thermal hysteresis in microtubule assembly/disassembly dynamics: The aging-induced degradation of tubulin dimers. <em>Biochemistry and Biophysics Reports</em>, 29, 101199.", "doi": "https://doi.org/10.1016/j.bbrep.2021.101199"}, {"year": "2022", "yearLabel": "2022", "type": "Journal Paper", "text": "Velez-Saboyá, C. S., Guzmán-Sepúlveda, J. R. &amp; Ruiz-Suárez, J. C. (2022). Phase transitions of liposomes: when light meets heat. <em>J. Physics: Condensed Matter</em>, 34(12), 124002.", "doi": "https://doi.org/10.1088/1361-648X/ac45b7"}, {"year": "2022", "yearLabel": "2022", "type": "Journal Paper", "text": "E. Pérez-Careta, J.R. Guzmán-Sepúlveda, J.M. Lozano-García, M. Torres-Cisneros &amp; R. Guzmán-Cabrera (2022) Clasificación de imágenes médicas mediante aprendizaje automático. <em>DYNA</em>, 97(1), 35&ndash;38.", "doi": "https://doi.org/10.6036/10117"}, {"year": "2022", "yearLabel": "2022", "type": "Conference Proceeding", "text": "N. Mar-Abundis, Y. A. Fuentes-Rubio, R. F. Domínguez-Cruz &amp; J. R. Guzmán-Sepúlveda. Measurement of sugar concentration by multimodal fiber optics sensor. <em>9th International Electronic Conference on Sensors and Applications</em>, MDPI, Nov 2022.", "doi": "https://doi.org/10.3390/ecsa-9-13273"}, {"year": "2021", "yearLabel": "2021", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R., Wu, R., &amp; Dogariu, A. (2021). Continuous optical measurement of internal dynamics in drying colloidal droplets. <em>J. Physical Chemistry B</em>, 125(49), 13533&ndash;13541.", "doi": "https://doi.org/10.1021/acs.jpcb.1c07237"}, {"year": "2021", "yearLabel": "2021", "type": "Journal Paper", "text": "Fuentes-Rubio Y.A.†, Domínguez-Cruz R.F., and Guzmán-Sepúlveda, J.R. (2021) Multipoint fiber optics refractive index sensor based on multimode interference effects. <em>Applied Optics</em>, 60(31), 9691&ndash;9695.", "doi": "https://doi.org/10.1364/AO.439151"}, {"year": "2021", "yearLabel": "2021", "type": "Journal Paper", "text": "Guzman-Cabrera, R., &amp; Guzman-Sepulveda, J. R.* (2021). Modal analysis of thin long-range plasmonic waveguides. <em>Optik</em>, 228, 165840.", "doi": "https://doi.org/10.1016/j.ijleo.2020.165840"}, {"year": "2021", "yearLabel": "2021", "type": "Journal Paper", "text": "Ruiz-Perez, V. I., Velasco-Bolom, P. M., May-Arrioja, D. A., &amp; Guzman-Sepulveda, J. R.* (2021). Measuring the thermo-optic coefficient of liquids with athermal multimode interference devices. <em>IEEE Sensors Journal</em>, 21(3), 3004&ndash;3012.", "doi": "https://doi.org/10.1109/JSEN.2020.3024924"}, {"year": "2021", "yearLabel": "2021", "type": "Journal Paper", "text": "Guzmán-Sepúlveda J. R.*, Guzmán-Cabrera R., and Castillo-Guzmán A.A. (2021). Optical sensing using fiber-optic multimode interference devices: A review of nonconventional sensing schemes. <em>Sensors</em>, 21(5), 1862&ndash;1882.", "doi": "https://doi.org/10.3390/s21051862"}, {"year": "2021", "yearLabel": "2021", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R.*, &amp; Castillo-Guzman, A. A. (2021). Wavelength tuning of multimode interference fiber lasers: A review. <em>Adv. Photonics Res.</em>, 2100051, 1&ndash;7.", "doi": "https://doi.org/10.1002/adpr.202100051"}, {"year": "2021", "yearLabel": "2021", "type": "Conference Proceeding", "text": "G. Salazar-Enríquez, G. Peñaloza-Jimenez &amp; J. R. Guzmán Sepúlveda. Evaluación de la aceptación y comprensión de la teoría de la Evolución en estudiantes de nivel medio superior en México. <em>Congreso Latinoamericano de Evolución (CLEVOL)</em>. Chile, Dec. 3rd, 2021.", "doi": ""}, {"year": "2021", "yearLabel": "2021", "type": "Conference Proceeding", "text": "J. R. Guzman-Sepulveda. Applications of coherence-gated dynamic light scattering in biology and medicine. <em>Mexican Optics and Photonics Meeting (MOPM)</em>. Invited talk. Puebla, Mexico, Nov. 25th, 2021.", "doi": ""}, {"year": "2021", "yearLabel": "2021", "type": "Conference Proceeding", "text": "R. Guzman-Cabrera, I. Hernández-Robles, X. González Ramírez &amp; J. R. Guzmán-Sepúlveda. Improved approach to wave potential estimation using bivariate distributions. <em>8th International Symposium on Language &amp; Knowledge Engineering (LKE)</em>. Puebla, Mexico, Nov. 5th, 2021.", "doi": ""}, {"year": "2020", "yearLabel": "2020", "type": "Journal Paper", "text": "Batarseh, M., Guzman-Sepulveda, J. R., Wu, R., M DeCampli, W. &amp; Dogariu, A. (2020). Passive coagulability assay based on coherence-gated light scattering. <em>Hemato</em>, 1(2), 49&ndash;59.", "doi": "https://doi.org/10.3390/hemato1020009"}, {"year": "2020", "yearLabel": "2020", "type": "Journal Paper", "text": "Guzman-Sepulveda, J.R., May-Arrioja, D.A., Fuentes-Fuentes M.A., Cuando-Espitia, N., Torres-Cisneros, M., Gonzalez-Gutierrez, K., and LiKamWa, P (2020). All-fiber measurement of surface tension using a two-hole fiber. <em>Sensors</em>, 20, 4219.", "doi": "https://doi.org/10.3390/s20154219"}, {"year": "2020", "yearLabel": "2020", "type": "Journal Paper", "text": "Guzman-Cabrera, R., &amp; Guzman-Sepulveda, J. R.* (2020). Plasmonic-dielectric hybrid interferometric structures for high-sensitivity refractive index sensing. <em>Optik</em>, 165185.", "doi": "https://doi.org/10.1016/j.ijleo.2020.165185"}, {"year": "2020", "yearLabel": "2020", "type": "Journal Paper", "text": "Acevedo, C. H., Guzman-Sepulveda, J. R. &amp; Dogariu, A. (2020). First-order statistics of the phase in optical vortex speckles. <em>J. Optical Society of America A</em>, 37(4), 584&ndash;590.", "doi": "https://doi.org/10.1364/JOSAA.383813"}, {"year": "2019", "yearLabel": "2019", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R., Wu, R., Kalra, A. P., Aminpour, M., Tuszynski, J.A. &amp; Dogariu, A. Tubulin polarizability in aqueous suspensions, <em>ACS Omega</em>, 4(5), 9144&ndash;9149 (2019).", "doi": "https://doi.org/10.1021/acsomega.9b00137"}, {"year": "2019", "yearLabel": "2019", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R. and Dogariu, A. Probing complex dynamics with spatiotemporal coherence-gated DLS, <em>Applied Optics</em>, 58(13), D76&ndash;D90, (2019).", "doi": "https://doi.org/10.1364/AO.58.000D76"}, {"year": "2019", "yearLabel": "2019", "type": "Journal Paper", "text": "M. A. Fuentes-Fuentes, D. A. May-Arrioja, J. R. Guzman-Sepulveda, F. Arteaga-Sierra, M. Torres-Cisneros, P. L. LiKamWa, and J. J. Sánchez-Mondragón. Suspended LRSPP for the development of highly integrated active plasmonic devices, <em>Optics Express</em>, 27(6), 8858&ndash;8870 (2019).", "doi": "https://doi.org/10.1364/OE.27.008858"}, {"year": "2018", "yearLabel": "2018", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R. and Dogariu, A., Multimode interference dynamic light scattering, <em>Optics Letters</em>, 43(17), 4232&ndash;4235 (2018).", "doi": "https://doi.org/10.1364/OL.43.004232"}, {"year": "2018", "yearLabel": "2018", "type": "Journal Paper", "text": "Martínez, J.C., Guzmán-Sepúlveda J.R., Torres-Cisneros, M., Córdova, T., Guzmán-Cabrera R (2018). Enhanced quality control in pharmaceutic applications by combining Raman spectroscopy and machine learning techniques. <em>Int. J. Thermophysics</em>, 39(79).", "doi": "https://doi.org/10.1007/s10765-018-2391-2"}, {"year": "2018", "yearLabel": "2018", "type": "Journal Paper", "text": "Ruiz-Perez, V. I., May-Arrioja, D. A., and Guzman-Sepulveda, J. R.* (2018). An all-solid athermal multimode-interference cascaded device for wavelength-locking. <em>IEEE Photonics Technology Letters</em>, 30(8), 669&ndash;672.", "doi": "https://doi.org/10.1109/LPT.2018.2810502"}, {"year": "2017", "yearLabel": "2017", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R., Deng, J., Fang, J., and Dogariu, A. (2017) Characterizing viscoelastic modulations in biopolymer hydrogels by coherence-gated light scattering. <em>J. Physical Chemistry B</em>, 121(39), 9234&ndash;9238.", "doi": "https://doi.org/10.1021/acs.jpcb.7b05835"}, {"year": "2017", "yearLabel": "2017", "type": "Journal Paper", "text": "Guzman-Sepulveda, J.R. &amp; Guzman-Cabrera, R. (2017) Evaluation of electromagnetic performance of emerging failures in electrical machines using computational simulation. <em>Electrical Engineering</em>, 100(3), 1491&ndash;1496.", "doi": "https://doi.org/10.1007/s00202-017-0604-5"}, {"year": "2017", "yearLabel": "2017", "type": "Journal Paper", "text": "May-Arrioja, D. A., &amp; Guzman-Sepulveda, J. R.* (2017). Highly sensitive fiber optic refractive index sensor using multicore coupled structures. <em>J. Lightwave Technology</em>, 35(13), 2695&ndash;2701.", "doi": "https://doi.org/10.1109/JLT.2017.2699619"}, {"year": "2017", "yearLabel": "2017", "type": "Journal Paper", "text": "Capilla-Gonzalez, G., May-Arrioja, D. A., Lopez-Cortes, D., &amp; Guzman-Sepulveda, J. R.* (2017). Stress homogenization effect in multicore fiber optic bending sensors. <em>Applied Optics</em>, 56(8), 2273&ndash;2279.", "doi": "https://doi.org/10.1364/AO.56.002273"}, {"year": "2017", "yearLabel": "2017", "type": "Journal Paper", "text": "Ruiz-Perez, V. I., May-Arrioja, D. A., &amp; Guzman-Sepulveda, J. R. (2017). Passive athermalization of multimode interference devices for wavelength-locking applications. <em>Optics Express</em>, 25(5), 4800&ndash;4809.", "doi": "https://doi.org/10.1364/OE.25.004800"}, {"year": "2017", "yearLabel": "2017", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R., Argueta-Morales, R., DeCampli, W. M., &amp; Dogariu, A. (2017). Real-time intraoperative monitoring of blood coagulability via coherence-gated light scattering. <em>Nature Biomedical Engineering</em>, 1, 0028, 1&ndash;6.", "doi": "https://doi.org/10.1038/s41551-017-0028"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Guzman-Sepulveda, J.R., Deng, J., Fang, J., &amp; Dogariu, A. (2016). In-situ characterization of structural dynamics in swelling hydrogels. <em>Soft Matter</em> 12, 5986&ndash;5994.", "doi": "https://doi.org/10.1039/C6SM00782A"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Fuentes-Fuentes, M. A., May-Arrioja, D. A., Guzman-Sepulveda, J. R., Torres-Cisneros, M., and Sánchez-Mondragón, J. J. (2015). Highly sensitive liquid core temperature sensor based on multimode interference effects. <em>Sensors</em>, 15(10), 26929&ndash;26939.", "doi": "https://doi.org/10.3390/s151026929"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R., Amin, S., Lewis, E. N., &amp; Dogariu, A. (2015). Full characterization of colloidal dynamics at low Péclet numbers. <em>Langmuir</em>, 31(38), 10351&ndash;10357.", "doi": "https://doi.org/10.1021/acs.langmuir.5b02665"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Liang, W., Guzman-Sepulveda, J. R., He, S., Dogariu, A., &amp; Fang, J. Y. (2015). Microrheology and release behaviors of self-assembled steroid hydrogels. <em>J. Materials Science and Chemical Engineering</em>, 3(8), 6&ndash;15.", "doi": "http://dx.doi.org/10.4236/msce.2015.38002"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Gonzalez-Parada, A., Guzman-Cabrera, R., Torres-Cisneros, M., &amp; Guzman-Sepulveda, J. R. (2015). Comparative analysis of thermography studies and electrical measurement of partial discharges in underground power cables. <em>Int. J. Thermophysics</em>, 36(9), 2356&ndash;2369.", "doi": "https://doi.org/10.1007/s10765-015-1926-z"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R., Douglass, K. M., Amin, S., Lewis, N. E., &amp; Dogariu, A. (2015). Passive optical mapping of structural evolution in complex fluids. <em>RSC Advances</em>, 5(7), 5357&ndash;5362.", "doi": "https://doi.org/10.1039/C4RA11627E"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R., &amp; May-Arrioja, D. A. (2013). In-fiber directional coupler for high-sensitivity curvature measurement. <em>Optics Express</em>, 21(10), 11853&ndash;11861.", "doi": "https://doi.org/10.1364/OE.21.011853"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Guzmán-Sepúlveda, J. R., Guzmán-Cabrera, R., Torres-Cisneros, M., Sánchez-Mondragón, J. J., &amp; May-Arrioja, D. A. (2013). A highly sensitive fiber optic sensor based on two-core fiber for refractive index measurement. <em>Sensors</em>, 13(10), 14200&ndash;14213.", "doi": "https://doi.org/10.3390/s131014200"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Guzman-Sepulveda, J. R., Ruiz-Perez, V. I., Torres-Cisneros, M., Sanchez-Mondragon, J. J., &amp; May-Arrioja, D. A. (2013). Fiber optic sensor for high-sensitivity salinity measurement. <em>IEEE Photonics Technology Letters</em>, 25(23), 2323&ndash;2326.", "doi": "https://doi.org/10.1109/LPT.2013.2286132"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Guzmán-Cabrera, R., Guzmán-Sepúlveda, J. R., Torres-Cisneros, M., May-Arrioja, D. A., Ruiz-Pinales, J., Ibarra-Manzano, O. G., Aviña-Cervantes, G., &amp; Parada, A. G. (2013). Digital image processing technique for breast cancer detection. <em>Int. J. Thermophysics</em>, 34(8-9), 1519&ndash;1531.", "doi": "https://doi.org/10.1007/s10765-012-1328-4"}, {"year": "2016", "yearLabel": "2016 and earlier", "type": "Journal Paper", "text": "Guzmán-Cabrera, R., Guzmán-Sepúlveda, J. R., Torres-Cisneros, M., May-Arrioja, D. A., Ruiz-Pinales, J., Ibarra-Manzano, O. G., &amp; Aviña-Cervantes, G. (2013). Pattern recognition in photoacoustic dataset. <em>Int. J. Thermophysics.</em>, 34(8-9), 1638&ndash;1645.", "doi": "https://doi.org/10.1007/s10765-013-1452-9"}];
+var PUB_YEARS = ["2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016"];
+
+
+  // ===== BUSCADOR DE PUBLICACIONES =====
+  var PUB_PAGE_SIZE = 10;
+  var pubState = { year: "", type: "", page: 1 };
+
+  function pubMatchesFilters(item) {
+    if (pubState.year && item.year !== pubState.year) return false;
+    if (pubState.type && item.type !== pubState.type) return false;
+    return true;
+  }
+
+  function pubRenderPagination(container, totalPages) {
+    container.innerHTML = '';
+    if (totalPages <= 1) return;
+    var frag = document.createDocumentFragment();
+
+    function makeBtn(label, page, disabled, isCurrent) {
+      var b = document.createElement('button');
+      b.textContent = label;
+      if (isCurrent) b.classList.add('current-page');
+      if (disabled) b.disabled = true;
+      b.addEventListener('click', function(){
+        pubState.page = page;
+        pubRender();
+        document.querySelector('.pub-search-card').scrollIntoView({behavior:'smooth', block:'start'});
+      });
+      return b;
+    }
+
+    frag.appendChild(makeBtn('First', 1, pubState.page === 1, false));
+    frag.appendChild(makeBtn('«', Math.max(1, pubState.page - 1), pubState.page === 1, false));
+
+    var start = Math.max(1, pubState.page - 2);
+    var end = Math.min(totalPages, pubState.page + 2);
+    if (start > 1) {
+      frag.appendChild(makeBtn('1', 1, false, pubState.page === 1));
+      if (start > 2) { var dots = document.createElement('span'); dots.textContent='…'; frag.appendChild(dots); }
+    }
+    for (var p = start; p <= end; p++) {
+      if (p === 1 && start === 1) { /* ya cubierto abajo en loop */ }
+      frag.appendChild(makeBtn(String(p), p, false, p === pubState.page));
+    }
+    if (end < totalPages) {
+      if (end < totalPages - 1) { var dots2 = document.createElement('span'); dots2.textContent='…'; frag.appendChild(dots2); }
+      frag.appendChild(makeBtn(String(totalPages), totalPages, false, pubState.page === totalPages));
+    }
+
+    frag.appendChild(makeBtn('»', Math.min(totalPages, pubState.page + 1), pubState.page === totalPages, false));
+    frag.appendChild(makeBtn('Last', totalPages, pubState.page === totalPages, false));
+
+    container.appendChild(frag);
+  }
+
+  function pubRender() {
+    var filtered = PUB_DATA.filter(pubMatchesFilters);
+    var countEl = document.getElementById('pubCount');
+    countEl.textContent = 'Found ' + filtered.length + ' publication' + (filtered.length === 1 ? '' : 's') + '.';
+
+    var totalPages = Math.max(1, Math.ceil(filtered.length / PUB_PAGE_SIZE));
+    if (pubState.page > totalPages) pubState.page = totalPages;
+
+    var listEl = document.getElementById('pubList');
+    listEl.innerHTML = '';
+
+    if (filtered.length === 0) {
+      var empty = document.createElement('div');
+      empty.className = 'pub-empty';
+      empty.textContent = 'No publications found with these filters.';
+      listEl.appendChild(empty);
+    } else {
+      var startIdx = (pubState.page - 1) * PUB_PAGE_SIZE;
+      var pageItems = filtered.slice(startIdx, startIdx + PUB_PAGE_SIZE);
+      pageItems.forEach(function(item){
+        var row = document.createElement('div');
+        row.className = 'pub-row';
+        var yearDiv = document.createElement('div');
+        yearDiv.className = 'pub-year';
+        yearDiv.textContent = item.yearLabel;
+        var textDiv = document.createElement('div');
+        textDiv.className = 'pub-text';
+        var tag = '<span class="pub-type-tag">' + (item.type === 'Journal Paper' ? 'Journal' : 'Conference') + '</span>';
+        var link = item.doi ? ' <a class="pub-link" href="' + item.doi + '" target="_blank" rel="noopener">DOI &#8599;</a>' : '';
+        textDiv.innerHTML = tag + item.text + link;
+        row.appendChild(yearDiv);
+        row.appendChild(textDiv);
+        listEl.appendChild(row);
+      });
+    }
+
+    pubRenderPagination(document.getElementById('pubPaginationTop'), totalPages);
+    pubRenderPagination(document.getElementById('pubPaginationBottom'), totalPages);
+  }
+
+  function pubInit() {
+    var yearSelect = document.getElementById('filterYear');
+    PUB_YEARS.forEach(function(y){
+      var opt = document.createElement('option');
+      opt.value = y; opt.textContent = y;
+      yearSelect.appendChild(opt);
+    });
+
+    yearSelect.addEventListener('change', function(){ pubState.year = yearSelect.value; pubState.page = 1; pubRender(); });
+    document.getElementById('filterType').addEventListener('change', function(e){ pubState.type = e.target.value; pubState.page = 1; pubRender(); });
+
+    pubRender();
+  }
+
+  pubInit();
+
+  // ===== PEOPLE: cards, description modal and copy email =====
+  // Nota sobre fotos: por defecto se recortan cuadradas priorizando la parte de ARRIBA de la
+  // imagen (para no cortar la cabeza). Si a alguien igual le queda mal encuadrada, agregar
+  // en su objeto: photoPosition: "center 20%"  (mientras más alto el %, más se ve hacia abajo).
+  var PEOPLE_DATA = {
+    postdoc: [
+      {
+        id: "roberto",
+        photo: "images/roberto-alvarez-aguirre.jpg", // IMAGEN AQUÍ: poner la ruta de la foto de esta persona (sugerido: images/roberto-alvarez-aguirre.jpg). Si queda vacío, se muestran las iniciales.
+        photoPosition: "center", // su foto ya se veía bien con el encuadre centrado normal
+        first: "Roberto A.",
+        last: "Álvarez-Aguirre",
+        role: "Postdoctoral Researcher",
+        email: "roberto.aguirrea@cinvestav.mx",
+        bio: "Postdoctoral Researcher at the Biophotonics and Optical Sensing Laboratory, Cinvestav Unidad Monterrey."
+      }
+    ],
+    phd: [
+      {
+        id: "josue",
+        photo: "images/josue-perales-hernandez.jpg", // IMAGEN AQUÍ: poner la ruta de la foto de esta persona (sugerido: images/josue-perales-hernandez.jpg). Si queda vacío, se muestran las iniciales.
+        first: "Josué A.",
+        last: "Perales-Hernández",
+        role: "PhD Student &middot; 2022&ndash;2026",
+        email: "josue.perales@cinvestav.mx",
+        bio: "PhD Student in Biomedical Engineering and Physics, Cinvestav Monterrey (2022–2026). He previously completed his master's in the same laboratory (2022), focused on a miniaturized fluorescence microscope made with 3D printed parts and a fiber optic-based illumination system."
+      },
+      {
+        id: "erick",
+        photo: "images/erick-zora-guzman.jpg", // IMAGEN AQUÍ: poner la ruta de la foto de esta persona (sugerido: images/erick-zora-guzman.jpg). Si queda vacío, se muestran las iniciales.
+        first: "Erick",
+        last: "Zora-Guzman",
+        role: "PhD Student &middot; 2023&ndash;2027",
+        email: "erick.zora@cinvestav.mx",
+        bio: "PhD Student in Biomedical Engineering and Physics, Cinvestav Monterrey (2023–2027). He completed his master's in the same laboratory (2023), on the optical characterization of aerosols by light scattering in localized volumes."
+      },
+      {
+        id: "omar",
+        photo: "images/omar-arrieta-guerrero.jpg", // IMAGEN AQUÍ: poner la ruta de la foto de esta persona (sugerido: images/omar-arrieta-guerrero.jpg). Si queda vacío, se muestran las iniciales.
+        first: "Omar A.",
+        last: "Arrieta-Guerrero",
+        role: "PhD Student &middot; 2023&ndash;2027",
+        email: "omar.arrieta@cinvestav.mx",
+        bio: "PhD Student in Biomedical Engineering and Physics, Cinvestav Monterrey (2023–2027). His master's thesis in the same laboratory (2023) investigated hydrate formation via coherence-gated DLS."
+      },
+      {
+        id: "vicente",
+        photo: "images/vicente-reyes-alejo.jpg", // IMAGEN AQUÍ: poner la ruta de la foto de esta persona (sugerido: images/vicente-reyes-alejo.jpg). Si queda vacío, se muestran las iniciales.
+        first: "Vicente",
+        last: "Reyes-Alejo",
+        role: "PhD Student &middot; 2024&ndash;2028",
+        email: "vicente.reyes@cinvestav.mx",
+        bio: "PhD Student in Biomedical Engineering and Physics, Cinvestav Monterrey (2024–2028). He completed his master's in the same laboratory (2024), developing a fiber-optics dynamic speckle generation system tuned by thermo-optic effects."
+      }
+    ],
+    masters: [
+      {
+        id: "karina",
+        photo: "images/karina-lorenzo-ramos.jpg", // IMAGEN AQUÍ: poner la ruta de la foto de esta persona (sugerido: images/karina-lorenzo-ramos.jpg). Si queda vacío, se muestran las iniciales.
+        first: "Karina Y.",
+        last: "Lorenzo-Ramos",
+        role: "Master's Student &middot; 2024&ndash;2026",
+        email: "karina.lorenzo@cinvestav.mx",
+        bio: "Master's Student in Biomedical Engineering and Physics, Cinvestav Monterrey (2024–2026)."
+      },
+      {
+        id: "jpadilla",
+        photo: "images/jose-padilla-mejia.jpg", // IMAGEN AQUÍ: poner la ruta de la foto de esta persona (sugerido: images/jose-padilla-mejia.jpg). Si queda vacío, se muestran las iniciales.
+        first: "José de Jesús",
+        last: "Padilla Mejía",
+        role: "Master's Student &middot; 2025&ndash;2027",
+        email: "j.padilla@cinvestav.mx",
+        bio: "Master's Student in Biomedical Engineering and Physics, Cinvestav Monterrey (2025–2027)."
+      }
+    ]
+  };
+
+  function initials(first, last) {
+    return (first.trim()[0] + last.trim()[0]).toUpperCase();
+  }
+
+  // Si person.photo tiene una ruta, devuelve un <img>; si no, devuelve las iniciales (placeholder)
+  // person.photoPosition (opcional) permite ajustar el encuadre de cada foto individualmente,
+  // ej. "top center", "center 20%", "50% 30%". Por defecto: "top center" (prioriza la cara).
+  function photoOrInitials(person) {
+    if (person.photo) {
+      var pos = person.photoPosition || 'top center';
+      return '<img src="' + person.photo + '" alt="' + person.first + ' ' + person.last + '" style="width:100%;height:100%;object-fit:cover;object-position:' + pos + ';">';
+    }
+    return initials(person.first, person.last);
+  }
+
+  function renderPeopleGrid(gridId, people) {
+    var grid = document.getElementById(gridId);
+    if (!grid) return;
+    people.forEach(function(person){
+      var wrap = document.createElement('div');
+      wrap.className = 'person-card-wrap';
+
+      var card = document.createElement('div');
+      card.className = 'person-card';
+      card.innerHTML =
+        '<div class="ph">' + photoOrInitials(person) + '</div>' +
+        '<div class="pname"><span class="first">' + person.first + '</span><span class="last">' + person.last + '</span></div>' +
+        '<div class="role">' + person.role + '</div>';
+
+      var emailBtn = document.createElement('button');
+      emailBtn.type = 'button';
+      emailBtn.className = 'person-btn copy-email-btn';
+      emailBtn.innerHTML = '<span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span> Email';
+      emailBtn.dataset.email = person.email;
+      emailBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        copyEmailToClipboard(person.email);
+      });
+
+      wrap.appendChild(card);
+      wrap.appendChild(emailBtn);
+      grid.appendChild(wrap);
+    });
+  }
+
+  function showToast(msg) {
+    var toast = document.getElementById('copyToast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+  }
+
+  function copyEmailToClipboard(email) {
+    function done(ok) {
+      showToast(ok ? 'Copied to clipboard' : 'Could not copy the email');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email).then(function(){ done(true); }).catch(function(){ done(false); });
+    } else {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = email;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        done(true);
+      } catch (err) {
+        done(false);
+      }
+    }
+  }
+
+  // Botón de email del PI (fuera de la grilla, ya está en el markup)
+  document.querySelectorAll('.copy-email-btn[data-email]').forEach(function(btn){
+    if (btn.closest('.people-grid')) return; // los de la grilla ya tienen su listener propio
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      copyEmailToClipboard(btn.dataset.email);
+    });
+  });
+
+  renderPeopleGrid('grid-postdoc', PEOPLE_DATA.postdoc);
+  renderPeopleGrid('grid-phd', PEOPLE_DATA.phd);
+  renderPeopleGrid('grid-masters', PEOPLE_DATA.masters);
+
+  // ===== ALUMNI: buscador filtrable (año, grado, alumno) =====
+  var ALUMNI_DATA = [
+    { year: "2026", grado: "PhD", nombre: "Abraham Alejandro Quiñones Flores", thesis: "Higher-order multimode interference devices.", programa: "PhD Physics Engineering, UANL", supervision: "Co-supervision", fecha: "31/08/2026", honor: "" },
+    { year: "2024", grado: "Master's", nombre: "Vicente Reyes Alejo", thesis: "Fiber-optics dynamic speckle generation system tuned by thermo-optic effects.", programa: "M.Sc. Biomedical Engineering and Physics, Cinvestav Monterrey", supervision: "Sole supervision", fecha: "27/08/2024", honor: "" },
+    { year: "2024", grado: "Master's", nombre: "Berenice Garrido Arteaga", thesis: "Characterization of perceptions about insects: Contributions from a biophysics-based workshop mediated by cultural entomology.", programa: "M.E. Biology for Citizenship Formation, Cinvestav Monterrey", supervision: "Co-supervision", fecha: "18/10/2024", honor: "" },
+    { year: "2023", grado: "Master's", nombre: "Erick Zora Guzmán", thesis: "Optical characterization of aerosols by light scattering in localized volumes.", programa: "M.Sc. Biomedical Engineering and Physics, Cinvestav Monterrey", supervision: "Sole supervision", fecha: "24/08/2023", honor: "" },
+    { year: "2023", grado: "Master's", nombre: "Omar Alejandro Arrieta Guerrero", thesis: "Hydrate formation investigated with coherence-gated DLS.", programa: "M.Sc. Biomedical Engineering and Physics, Cinvestav Monterrey", supervision: "Co-supervision", fecha: "21/08/2023", honor: "" },
+    { year: "2022", grado: "Master's", nombre: "Daniela Nataly Díaz Zepeda", thesis: "Feasibility of coherence-gated DLS for passive, non-invasive characterization of cellular dynamics and rheology.", programa: "M.Sc. Biomedical Engineering and Physics, Cinvestav Monterrey", supervision: "Sole supervision", fecha: "01/09/2022", honor: "" },
+    { year: "2022", grado: "Master's", nombre: "Josué Alejandro Perales Hernández", thesis: "Miniaturized fluorescence microscope made with 3D printed parts and fiber optic-based illumination system.", programa: "M.Sc. Biomedical Engineering and Physics, Cinvestav Monterrey", supervision: "Co-supervision", fecha: "17/08/2022", honor: "" },
+    { year: "2022", grado: "PhD", nombre: "Yadira Aracely Fuentes Rubio", thesis: "Fiber optics sensors for preventing environmental and public health contingencies.", programa: "PhD Electrical & Electronics Engineering, UAT", supervision: "Co-supervision", fecha: "23/05/2022", honor: "" },
+    { year: "2022", grado: "Master's", nombre: "Guadalupe Salazar Enríquez", thesis: "Study of the understanding and acceptance of the Theory of Evolution in high school students in Mexico.", programa: "M.E. Biology for Citizenship Formation, Cinvestav Monterrey", supervision: "Co-supervision", fecha: "10/10/2022", honor: "" },
+    { year: "2021", grado: "PhD", nombre: "Carlos Enrique Bender López", thesis: "Tunable fiber lasers tuned by interference filters based on spherical micro-cavities.", programa: "PhD Physics Engineering, UANL", supervision: "Co-supervision", fecha: "10/09/2021", honor: "Cum Laude Honors" },
+    { year: "2019", grado: "Bachelor's", nombre: "Wendy Morales Castro", thesis: "Automatic pattern detection in lung tuberculosis images.", programa: "Bachelor of Computer Science, UG", supervision: "Co-supervision", fecha: "06/12/2019", honor: "Award-winning thesis" }
+  ];
+
+  var ALUMNI_PAGE_SIZE = 10;
+  var alumniState = { year: "", grado: "", page: 1 };
+
+  function alumniMatchesFilters(item) {
+    if (alumniState.year && item.year !== alumniState.year) return false;
+    if (alumniState.grado && item.grado !== alumniState.grado) return false;
+    return true;
+  }
+
+  function genericRenderPagination(container, totalPages, state, onPageChange) {
+    container.innerHTML = '';
+    if (totalPages <= 1) return;
+    var frag = document.createDocumentFragment();
+    function makeBtn(label, page, disabled, isCurrent) {
+      var b = document.createElement('button');
+      b.textContent = label;
+      if (isCurrent) b.classList.add('current-page');
+      if (disabled) b.disabled = true;
+      b.addEventListener('click', function(){ onPageChange(page); });
+      return b;
+    }
+    frag.appendChild(makeBtn('First', 1, state.page === 1, false));
+    frag.appendChild(makeBtn('«', Math.max(1, state.page - 1), state.page === 1, false));
+    var start = Math.max(1, state.page - 2);
+    var end = Math.min(totalPages, state.page + 2);
+    if (start > 1) {
+      frag.appendChild(makeBtn('1', 1, false, state.page === 1));
+      if (start > 2) { var d1 = document.createElement('span'); d1.textContent = '…'; frag.appendChild(d1); }
+    }
+    for (var p = start; p <= end; p++) frag.appendChild(makeBtn(String(p), p, false, p === state.page));
+    if (end < totalPages) {
+      if (end < totalPages - 1) { var d2 = document.createElement('span'); d2.textContent = '…'; frag.appendChild(d2); }
+      frag.appendChild(makeBtn(String(totalPages), totalPages, false, state.page === totalPages));
+    }
+    frag.appendChild(makeBtn('»', Math.min(totalPages, state.page + 1), state.page === totalPages, false));
+    frag.appendChild(makeBtn('Last', totalPages, state.page === totalPages, false));
+    container.appendChild(frag);
+  }
+
+  function alumniRender() {
+    var filtered = ALUMNI_DATA.filter(alumniMatchesFilters);
+    var countEl = document.getElementById('alumniCount');
+    countEl.textContent = 'Found ' + filtered.length + ' thes' + (filtered.length === 1 ? 'is' : 'es') + '.';
+
+    var totalPages = Math.max(1, Math.ceil(filtered.length / ALUMNI_PAGE_SIZE));
+    if (alumniState.page > totalPages) alumniState.page = totalPages;
+
+    var listEl = document.getElementById('alumniList');
+    listEl.innerHTML = '';
+
+    if (filtered.length === 0) {
+      var empty = document.createElement('div');
+      empty.className = 'pub-empty';
+      empty.textContent = 'No alumni found with these filters.';
+      listEl.appendChild(empty);
+    } else {
+      var startIdx = (alumniState.page - 1) * ALUMNI_PAGE_SIZE;
+      var pageItems = filtered.slice(startIdx, startIdx + ALUMNI_PAGE_SIZE);
+      pageItems.forEach(function(item){
+        var row = document.createElement('div');
+        row.className = 'pub-row';
+        var yearDiv = document.createElement('div');
+        yearDiv.className = 'pub-year';
+        yearDiv.textContent = item.year;
+        var textDiv = document.createElement('div');
+        textDiv.className = 'pub-text';
+        var honorHtml = item.honor ? ' <span class="pub-type-tag" style="background:#f4e9c1;color:#8a6d00;">' + item.honor + '</span>' : '';
+        textDiv.innerHTML =
+          '<span class="pub-type-tag">' + item.grado + '</span>' +
+          '<strong>' + item.nombre + '.</strong> ' + item.thesis +
+          '<br><span class="meta">' + item.programa + ' &middot; ' + item.supervision + ' &middot; ' + item.fecha + '</span>' +
+          honorHtml;
+        row.appendChild(yearDiv);
+        row.appendChild(textDiv);
+        listEl.appendChild(row);
+      });
+    }
+
+    genericRenderPagination(document.getElementById('alumniPaginationTop'), totalPages, alumniState, function(page){
+      alumniState.page = page; alumniRender();
+      document.querySelector('#alumni .pub-search-card').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    genericRenderPagination(document.getElementById('alumniPaginationBottom'), totalPages, alumniState, function(page){
+      alumniState.page = page; alumniRender();
+      document.querySelector('#alumni .pub-search-card').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
+
+  function alumniInit() {
+    var years = Array.from(new Set(ALUMNI_DATA.map(function(a){ return a.year; }))).sort().reverse();
+    var yearSelect = document.getElementById('filterAlumniYear');
+    years.forEach(function(y){
+      var opt = document.createElement('option');
+      opt.value = y; opt.textContent = y;
+      yearSelect.appendChild(opt);
+    });
+
+    yearSelect.addEventListener('change', function(){ alumniState.year = yearSelect.value; alumniState.page = 1; alumniRender(); });
+    document.getElementById('filterAlumniGrado').addEventListener('change', function(e){ alumniState.grado = e.target.value; alumniState.page = 1; alumniRender(); });
+
+    alumniRender();
+  }
+
+  alumniInit();
+
+  // ===== INVESTIGACIÓN: lista, detalle y publicación relacionada =====
+  var RESEARCH_PROJECTS = [
+    {
+      id: "diabetes",
+      images: ["", "", "", ""], // 4 espacios de imagen (tema: diabetes)
+      title: "Optical measurement of blood viscoelasticity as an auxiliary marker in the diagnosis and treatment of diabetes",
+      years: "2025–",
+      meta: "Supported by SECIHTI, Mexico, grant CBF-2025-I-2590. Role: Principal Investigator.",
+      desc: "",
+      pub: null
+    },
+    {
+      id: "aerosoles",
+      images: ["", "", "", ""], // 4 espacios de imagen (tema: aerosoles)
+      title: "Optical analysis of biological aerosols for intraoperative tissue characterization",
+      years: "2023–",
+      meta: "Supported by ONR Global, ARL, DEVCOM, USA, grant N62909-23-1-2103. Role: Principal Investigator.",
+      desc: "",
+      pub: { title: "Optical characterization of native aerosols from e-cigarettes in localized volumes", venue: "Biomedical Optics Express (2024)", doi: "https://doi.org/10.1364/BOE.507316" }
+    },
+    {
+      id: "nanovesiculas",
+      images: ["", "", "", ""], // 4 espacios de imagen (tema: nanovesiculas)
+      title: "A microfluidic device to assess the anti-inflammatory effects of ginger-derived nanovesicles on mammalian cells",
+      years: "2021 to date",
+      meta: "Supported by the European Union's Horizon 2020 Research and Innovation Programme. Supervised by Dr. Gabriella Pocsfalvi. Role: Collaborator.",
+      desc: "",
+      pub: null
+    },
+    {
+      id: "covid",
+      images: ["", "", "", ""], // 4 espacios de imagen (tema: covid)
+      title: "Correlation between the optical measurement of blood viscoelasticity and standard coagulation tests in patients with COVID-19",
+      years: "2020",
+      meta: "Approved by IMSS Scientific Committee, Mexico (IMSS R-2020-785-173). Role: Collaborator.",
+      desc: "",
+      pub: { title: "Passive coagulability assay based on coherence-gated light scattering", venue: "Hemato (2020)", doi: "https://doi.org/10.3390/hemato1020009" }
+    },
+    {
+      id: "citoesqueleto",
+      images: ["", "", "", ""], // 4 espacios de imagen (tema: citoesqueleto)
+      title: "Electrodynamically mediated energy transduction in cytoskeleton",
+      years: "2017–2021",
+      meta: "Supported by DARPA, USA (RadioBio Program, grant HR001117S0021). Supervised by Dr. Aristide Dogariu. Role: Collaborator.",
+      desc: "",
+      pub: { title: "Tubulin polarizability in aqueous suspensions", venue: "ACS Omega (2019)", doi: "https://doi.org/10.1021/acsomega.9b00137" }
+    },
+    {
+      id: "cardiaca-pediatrica",
+      images: ["", "", "", ""], // 4 espacios de imagen (tema: cardiaca)
+      title: "Real-time intraoperative monitoring of blood coagulability via coherence-gated light scattering during cardiopulmonary bypass in pediatric cardiac surgery",
+      years: "2014–2022",
+      meta: "Supported by NIH and the National Heart, Lung and Blood Institute, USA (5R21HL124486). Supervised by Dr. Aristide Dogariu and Dr. William DeCampli. Role: Collaborator.",
+      desc: "",
+      pub: { title: "Real-time intraoperative monitoring of blood coagulability via coherence-gated light scattering", venue: "Nature Biomedical Engineering (2017)", doi: "https://doi.org/10.1038/s41551-017-0028" }
+    },
+    {
+      id: "hidrogeles",
+      images: ["", "", "", ""], // 4 espacios de imagen (tema: hidrogeles)
+      title: "In situ characterization of structural dynamics and viscoelastic modulations of bio-compatible hydrogels",
+      years: "2014–2017",
+      meta: "Supported by NIH (1R21HL124486-01A1) and NSF (CBET-1264355), USA. Supervised by Dr. Aristide Dogariu (CREOL, UCF). Role: Collaborator.",
+      desc: "",
+      pub: { title: "Characterizing viscoelastic modulations in biopolymer hydrogels by coherence-gated light scattering", venue: "J. Physical Chemistry B (2017)", doi: "https://doi.org/10.1021/acs.jpcb.7b05835" }
+    },
+    {
+      id: "malvern",
+      images: ["", "", "", ""], // 4 espacios de imagen (tema: dispersion_elaborada)
+      title: "Coherence-gated dynamic light scattering for the micro-rheological characterization of complex media",
+      years: "2013–2016",
+      meta: "Supported by Malvern Panalytics, USA. Supervised by Dr. Aristide Dogariu (CREOL, UCF). Role: Collaborator.",
+      desc: "",
+      pub: { title: "Full characterization of colloidal dynamics at low Péclet numbers", venue: "Langmuir (2015)", doi: "https://doi.org/10.1021/acs.langmuir.5b02665" }
+    }
+  ];
+
+  function researchImgHtml(proj, cssClass) {
+    var boxes = (proj.images || ["", "", "", ""]).map(function(img){
+      if (img) {
+        return '<div class="' + cssClass + '-box" style="background-image:url(\'' + img + '\'); background-size:cover; background-position:center;"></div>';
+      }
+      return '<div class="' + cssClass + '-box"></div>';
+    }).join('');
+    return '<div class="' + cssClass + '">' + boxes + '</div>';
+  }
+
+  function renderResearchList() {
+    var list = document.getElementById('research-list');
+    if (!list) return;
+    RESEARCH_PROJECTS.forEach(function(proj){
+      var row = document.createElement('div');
+      row.className = 'research-row';
+      row.innerHTML =
+        '<div>' +
+          '<div class="research-banner">' +
+            '<div class="research-banner-top">' +
+              '<span class="rb-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>' +
+              proj.title + ' (' + proj.years + ')' +
+            '</div>' +
+            '<div class="research-banner-meta">' + proj.meta + '</div>' +
+          '</div>' +
+          '<p class="research-summary">' + (proj.desc || '') + '</p>' +
+        '</div>';
+      list.appendChild(row);
+    });
+  }
+
+  renderResearchList();
+
+  // Visual grande del hero: tambien navega a Research
+  var heroVisual = document.querySelector('.home-hero-visual[data-detail]');
+  if (heroVisual) {
+    heroVisual.style.cursor = 'pointer';
+    heroVisual.addEventListener('click', function(){
+      showSection('investigacion');
+    });
+  }
+
+</script>
+
+<script>
+  var siteNav = document.getElementById('siteNav');
+  var drawerOverlay = document.getElementById('drawerOverlay');
+  var hamburgerBtn = document.getElementById('hamburgerBtn');
+  var drawerCloseBtn = document.getElementById('drawerCloseBtn');
+
+  function openDrawer() {
+    siteNav.classList.add('open');
+    drawerOverlay.classList.add('open');
+  }
+  function closeDrawer() {
+    siteNav.classList.remove('open');
+    drawerOverlay.classList.remove('open');
+    document.querySelectorAll('.site-nav li.submenu-open').forEach(function(li){
+      li.classList.remove('submenu-open');
+    });
+  }
+
+  hamburgerBtn.addEventListener('click', openDrawer);
+  drawerCloseBtn.addEventListener('click', closeDrawer);
+  drawerOverlay.addEventListener('click', closeDrawer);
+
+  function showSection(key, subtab) {
+    document.querySelectorAll('.page-section').forEach(function(s){ s.classList.remove('active'); });
+    var target = document.getElementById('sec-' + key);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.site-nav > ul > li > a[data-nav]').forEach(function(a){
+      a.classList.toggle('active', a.dataset.nav === key);
+    });
+    window.scrollTo({top:0, behavior:'instant'});
+    if (subtab && target) {
+      var btn = target.querySelector('.tab-btn[data-tab="' + subtab + '"]');
+      if (btn) btn.click();
+    }
+  }
+
+  document.querySelectorAll('[data-nav]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var isMobile = window.innerWidth <= 640;
+      if (isMobile && a.classList.contains('has-caret')) {
+        var li = a.closest('li');
+        li.classList.toggle('submenu-open');
+        return;
+      }
+      showSection(a.dataset.nav);
+      closeDrawer();
+    });
+  });
+  document.querySelectorAll('[data-goto]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      showSection(a.dataset.goto, a.dataset.subtab);
+      closeDrawer();
+    });
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var scope = btn.closest('.page-section');
+      scope.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      scope.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      scope.querySelector('#' + btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
